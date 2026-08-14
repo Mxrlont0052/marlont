@@ -269,6 +269,42 @@ nav .marca img{height:32px;width:auto}
 .hecho b a{text-decoration:none;border-bottom:1px solid rgba(198,28,255,.35);transition:border-color .2s,color .2s}
 .hecho b a:hover{color:var(--magenta);border-color:var(--magenta)}
 
+/* ================= PROYECTOS =================
+   Cada tarjeta trae la paleta de su propio producto, no la de Marlont.
+   El contraste es a propósito: se lee como otra marca, no como una sección más. */
+.proyectos{padding:6rem 0;border-top:1px solid var(--line)}
+.proyectos h2{font-family:'Bricolage Grotesque','Archivo',sans-serif;font-weight:800;
+  font-size:clamp(1.9rem,4.4vw,3.2rem);color:var(--white);letter-spacing:-.035em;
+  line-height:1;margin:.9rem 0 .8rem}
+.proyectos .intro{font-size:.84rem;color:var(--mute);max-width:52ch;line-height:1.85;margin-bottom:2.5rem}
+
+.proyecto{position:relative;display:grid;grid-template-columns:auto 1fr auto;gap:2rem;align-items:center;
+  padding:2rem;border-radius:14px;text-decoration:none;overflow:hidden;
+  background:var(--p-fondo);border:1px solid var(--p-borde);
+  transition:transform .3s cubic-bezier(.6,0,.2,1),border-color .3s}
+.proyecto::before{content:'';position:absolute;inset:0;z-index:0;opacity:.5;
+  background:radial-gradient(120% 150% at 8% 0%,var(--p-luz),transparent 62%)}
+.proyecto:hover{transform:translateY(-4px);border-color:var(--p-acento)}
+.proyecto>*{position:relative;z-index:1}
+.proyecto .icono{width:66px;height:66px;border-radius:15px;overflow:hidden;flex-shrink:0}
+.proyecto .icono img{width:100%;height:100%}
+.proyecto .texto{display:block}
+.proyecto .nombre{display:block;font-family:'Bricolage Grotesque','Archivo',sans-serif;font-weight:800;
+  font-size:clamp(1.3rem,2.6vw,1.9rem);letter-spacing:-.03em;line-height:1;color:var(--p-texto)}
+.proyecto .lema{display:block;font-size:.8rem;color:var(--p-acento);margin-top:.45rem;font-weight:400}
+.proyecto .que{display:block;font-size:.82rem;color:var(--p-mut);line-height:1.75;margin-top:.7rem;max-width:56ch}
+.proyecto .ir{font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--p-texto);border:1px solid var(--p-borde2);
+  padding:.85em 1.3em;white-space:nowrap;transition:background .25s,border-color .25s}
+.proyecto:hover .ir{background:var(--p-acento);border-color:var(--p-acento);color:#0D0B0A}
+
+/* paleta propia de MXR STEMS (negro + fuego) */
+.proyecto.stems{
+  --p-fondo:#0D0B0A; --p-borde:rgba(255,200,0,.22); --p-borde2:rgba(255,255,255,.22);
+  --p-texto:#F6F1ED; --p-mut:#A0938C; --p-acento:#FFC800;
+  --p-luz:rgba(255,107,53,.28);
+}
+
 /* ================= PREGUNTAS ================= */
 .faq{padding:6rem 0;border-top:1px solid var(--line)}
 .faq h2{font-family:'Bricolage Grotesque','Archivo',sans-serif;font-weight:800;
@@ -426,6 +462,12 @@ footer p{font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.18e
   .hecho span{font-size:.68rem}
   .cat-pie{font-size:.7rem}
   .clip .texto{font-size:.7rem;line-height:1.45}
+  .proyectos{padding:3.5rem 0}
+  .proyecto{grid-template-columns:auto 1fr;gap:1.1rem;padding:1.4rem}
+  .proyecto .icono{width:52px;height:52px;border-radius:12px}
+  .proyecto .ir{grid-column:1/-1;text-align:center;margin-top:.6rem;min-height:44px;
+    display:flex;align-items:center;justify-content:center}
+  .proyecto .que{font-size:.8rem}
   .campo label{font-size:.7rem}
   footer p{font-size:.7rem}
 }
@@ -441,7 +483,7 @@ footer p{font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.18e
     <li><a href="#historia">Historia</a></li>
     <li><a href="#catalogo">Versiones</a></li>
     <li><a href="#videos">Videos</a></li>
-    <li><a href="#preguntas">FAQ</a></li>
+    <li><a href="#proyectos">Proyectos</a></li>
     <li><a href="#booking">Booking</a></li>
   </ul>
 </nav>
@@ -638,6 +680,25 @@ footer p{font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.18e
   </div>
 </section>
 
+<!-- ===== PROYECTOS ===== -->
+<section class="proyectos" id="proyectos">
+  <div class="env">
+    <span class="rotulo sube">Lo que he construido</span>
+    <h2 class="sube">No solo pincho: <span class="resalta">hago herramientas</span></h2>
+    <p class="intro sube">Cuando algo que necesito para mezclar no existe, lo construyo. Esto es lo que ha salido de ahí.</p>
+
+    <a class="proyecto stems sube" href="https://stems.marlont.com" target="_blank" rel="noopener">
+      <span class="icono"><img src="assets/mxr-stems.svg" alt="" width="66" height="66" loading="lazy"></span>
+      <span class="texto">
+        <span class="nombre">MXR STEMS</span>
+        <span class="lema">Tu versión, nadie más la tiene</span>
+        <span class="que">Separa cualquier tema en stems limpios, le saca los coros a una acapella y arma el <strong>.stem.mp4</strong> listo para Traktor Pro 4. Todo en el navegador, sin instalar nada.</span>
+      </span>
+      <span class="ir">Abrir ↗</span>
+    </a>
+  </div>
+</section>
+
 <!-- ===== PREGUNTAS ===== -->
 <section class="faq" id="preguntas">
   <div class="env">
@@ -662,6 +723,11 @@ footer p{font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.18e
     <details class="sube">
       <summary>¿Tiene certificación profesional?</summary>
       <p>Sí. Cuenta con un <strong>certificado de DJ avalado por el Ministerio del Trabajo del Ecuador</strong>, además de su formación en ROMO DJ Academy, donde hoy forma parte del equipo.</p>
+    </details>
+
+    <details class="sube">
+      <summary>¿Marlont desarrolla herramientas para DJs?</summary>
+      <p>Sí. Creó <a href="https://stems.marlont.com" target="_blank" rel="noopener">MXR STEMS</a>, una herramienta web que separa canciones en stems limpios, extrae coros y segundas voces de acapellas, y genera archivos <strong>.stem.mp4</strong> listos para Traktor Pro 4 — todo desde el navegador, sin instalar nada. Nació de una necesidad propia: poder armar versiones que nadie más tiene.</p>
     </details>
 
     <details class="sube">
@@ -825,6 +891,32 @@ footer p{font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.18e
 }
 </script>
 
+<!-- Herramienta que él mismo construyó: declararla lo posiciona como
+     productor y desarrollador, no solo como DJ -->
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"SoftwareApplication",
+  "@id":"https://stems.marlont.com/#app",
+  "name":"MXR STEMS",
+  "alternateName":"MXR Stems",
+  "url":"https://stems.marlont.com",
+  "applicationCategory":"MultimediaApplication",
+  "operatingSystem":"Navegador web",
+  "description":"Herramienta web para DJs que separa cualquier canción en stems limpios (drums, bass, other, vocals), extrae coros y segundas voces de una acapella, y arma archivos .stem.mp4 listos para Traktor Pro 4. Funciona en el navegador, sin instalar nada.",
+  "featureList":[
+    "Separación en 2 o 4 stems en calidad WAV",
+    "Extracción de coros y segundas voces de acapellas",
+    "Creación de archivos .stem.mp4 para Traktor Pro 4",
+    "Procesamiento en la nube con GPU, sin instalación"
+  ],
+  "inLanguage":"es",
+  "author":{"@id":"https://marlont.com/#marlont"},
+  "creator":{"@id":"https://marlont.com/#marlont"},
+  "offers":{"@type":"Offer","price":"0","priceCurrency":"USD","description":"3 stems gratis, sin tarjeta"}
+}
+</script>
+
 <!-- Preguntas frecuentes: es lo que mejor leen las IAs cuando les preguntan por él.
      Cada respuesta existe también como texto visible en la página. -->
 <script type="application/ld+json">
@@ -837,6 +929,7 @@ footer p{font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.18e
     {"@type":"Question","name":"¿Qué géneros toca Marlont?","acceptedAnswer":{"@type":"Answer","text":"Toca crossover: reggaetón, afro house, dancehall, salsa, cumbia, merengue y afrobeat. No se casa con un solo género — arma el set según lo que pida el público esa noche. Como productor trabaja principalmente reggae y reggaetón en Ableton Live y Traktor."}},
     {"@type":"Question","name":"¿Dónde toca Marlont actualmente?","acceptedAnswer":{"@type":"Answer","text":"Es DJ residente en Mola Rooftop en Quito, Ecuador. También ha tocado en el Hotel Dann Carlton y en las Fiestas de Quito, además de bodas, eventos corporativos y fiestas privadas."}},
     {"@type":"Question","name":"¿Marlont tiene certificación profesional de DJ?","acceptedAnswer":{"@type":"Answer","text":"Sí. Cuenta con un certificado de DJ avalado por el Ministerio del Trabajo del Ecuador, además de su formación en ROMO DJ Academy, donde hoy forma parte del equipo."}},
+    {"@type":"Question","name":"¿Marlont desarrolla herramientas para DJs?","acceptedAnswer":{"@type":"Answer","text":"Sí. Creó MXR STEMS (stems.marlont.com), una herramienta web que separa canciones en stems limpios, extrae coros y segundas voces de acapellas, y genera archivos .stem.mp4 listos para Traktor Pro 4, todo desde el navegador y sin instalar nada."}},
     {"@type":"Question","name":"¿Qué significa MXR?","acceptedAnswer":{"@type":"Answer","text":"MXR es el sello de Marlont como productor. Cada versión que edita lleva ese tag en el archivo — por ejemplo (MXR Ext) para una versión extended o (MXR Edit) para una edición. Si aparece MXR en el nombre de un archivo, esa mezcla es suya."}},
     {"@type":"Question","name":"¿Cómo contratar a Marlont para un evento en Quito?","acceptedAnswer":{"@type":"Answer","text":"Por WhatsApp al +593 97 906 0882 o mediante el formulario en marlont.com. Cubre Quito y el resto de Ecuador, para bodas, eventos corporativos, fiestas privadas, residencias en clubes y festivales. La respuesta llega en menos de 24 horas."}}
   ]
