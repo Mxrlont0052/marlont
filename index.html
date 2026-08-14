@@ -31,12 +31,16 @@
 <meta name="twitter:image" content="https://marlont.com/assets/og.jpg">
 
 <link rel="icon" href="assets/favicon.svg?v=2" type="image/svg+xml">
-<link rel="apple-touch-icon" href="assets/og.jpg">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&amp;family=Archivo:wght@300;400;500;600&amp;family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,700;12..96,800&amp;family=Space+Mono:wght@400;700&amp;display=swap">
 <link rel="preload" as="image" href="assets/hero-bg.jpg" imagesrcset="assets/hero-bg-1200.jpg 1200w, assets/hero-bg.jpg 1808w" imagesizes="100vw">
+
+<!-- Marca que el JS está vivo ANTES de pintar. Las animaciones de entrada solo
+     se activan si esta clase existe: sin JS, el contenido se ve, no se esconde. -->
+<script>document.documentElement.className+=' js';</script>
 
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -44,6 +48,9 @@
   --purple:#6A00FF; --magenta:#C61CFF; --deep:#3D008F;
   --ink:#05000A; --ink-2:#0A0410; --ink-3:#0E0618;
   --white:#FFFFFF; --soft:#CFC9DA; --mute:#7B7390;
+  /* el catálogo tiene fondo más claro: necesita un tenue más claro para
+     mantener el contraste mínimo accesible (4.5:1) */
+  --cat-mut:#8B82A3;
   --line:rgba(255,255,255,.08);
   --ancho:1180px;
   --grano:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
@@ -56,6 +63,7 @@ a{color:inherit}
 :focus-visible{outline:2px solid var(--magenta);outline-offset:3px}
 
 .env{max-width:var(--ancho);margin:0 auto;padding:0 2.5rem}
+h2.rotulo{margin:0}
 .rotulo{font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.34em;
   text-transform:uppercase;color:var(--magenta);display:block}
 /* Anton queda SOLO para el sello MXR del hero. Todo lo demás es Bricolage. */
@@ -213,7 +221,7 @@ nav .marca img{height:32px;width:auto}
 .tabla td{padding:1.05rem 1rem;font-size:.78rem;vertical-align:middle}
 .t-num{color:var(--mute);font-size:.68rem;width:3.5rem}
 .t-tema{color:var(--white);font-family:'Archivo',sans-serif;font-weight:500;font-size:.95rem;letter-spacing:-.01em}
-.t-tema span{display:block;font-family:'Space Mono',monospace;font-size:.62rem;color:var(--mute);
+.t-tema span{display:block;font-family:'Space Mono',monospace;font-size:.62rem;color:var(--cat-mut);
   letter-spacing:.12em;margin-top:.25rem;font-weight:400}
 /* la etiqueta MXR va pegada como sticker, torcida y alternando el lado */
 .chip{display:inline-block;font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;
@@ -221,7 +229,10 @@ nav .marca img{height:32px;width:auto}
   transform:rotate(-1.6deg);box-shadow:2px 2px 0 rgba(0,0,0,.55);transition:transform .25s}
 .tabla tbody tr:nth-child(even) .chip{transform:rotate(1.4deg);background:var(--magenta);color:#0A0410}
 .tabla tbody tr:hover .chip{transform:rotate(0deg) scale(1.05)}
-.t-dato{color:var(--mute);font-size:.68rem;letter-spacing:.14em;white-space:nowrap}
+.t-dato{color:var(--cat-mut);font-size:.68rem;letter-spacing:.14em;white-space:nowrap}
+/* escritorio: género y BPM en sus propias columnas. Móvil: apilados junto al sticker.
+   Resuelto con CSS, no con JS, para que funcione siempre. */
+.t-datos-fila .oculta-esc{display:none}
 
 .cat-pie{margin-top:2rem;display:flex;justify-content:space-between;align-items:center;
   gap:1.5rem;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:.6rem;
@@ -357,12 +368,13 @@ footer img{height:22px;width:auto;opacity:.4}
 footer p{font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.18em;
   text-transform:uppercase;color:rgba(255,255,255,.25)}
 
-.sube{opacity:0;transform:translateY(20px);transition:opacity .8s ease,transform .8s ease}
-.sube.dentro{opacity:1;transform:none}
+/* solo se esconde si el JS confirmó estar vivo (clase .js en <html>) */
+.js .sube{opacity:0;transform:translateY(20px);transition:opacity .8s ease,transform .8s ease}
+.js .sube.dentro{opacity:1;transform:none}
 @media(prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   *,*::before,*::after{animation-duration:.001ms !important;transition-duration:.001ms !important}
-  .sube{opacity:1;transform:none}
+  .js .sube{opacity:1;transform:none}
 }
 
 /* ================= TABLET ================= */
@@ -430,6 +442,8 @@ footer p{font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.18e
   .tabla td.t-num{display:none}
   .t-tema{font-size:1rem}
   .tabla td.t-datos-fila{display:flex;gap:.7rem;align-items:center;flex-wrap:wrap;margin-top:.6rem}
+  .t-datos-fila .oculta-esc{display:inline}
+  .tabla td.solo-esc{display:none}
 
   .rejilla{grid-template-columns:1fr 1fr;gap:.7rem}
   .clip .texto{font-size:.6rem;padding:.65rem}
@@ -484,9 +498,12 @@ footer p{font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.18e
     <li><a href="#catalogo">Versiones</a></li>
     <li><a href="#videos">Videos</a></li>
     <li><a href="#proyectos">Proyectos</a></li>
+    <li><a href="#preguntas">FAQ</a></li>
     <li><a href="#booking">Booking</a></li>
   </ul>
 </nav>
+
+<main id="contenido">
 
 <!-- ===== HERO ===== -->
 <header class="hero" id="top">
@@ -563,11 +580,11 @@ footer p{font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.18e
 </section>
 
 <!-- ===== CITA ===== -->
-<section class="cita">
+<div class="cita">
   <div class="env">
     <blockquote class="sube">Empecé a los 12.<br>No he vivido de <em class="resalta">otra</em> <em class="resalta b">cosa</em>.</blockquote>
   </div>
-</section>
+</div>
 
 <!-- ===== CAPÍTULO 02 ===== -->
 <section class="capitulo invertido">
@@ -618,7 +635,17 @@ footer p{font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.18e
       <thead>
         <tr><th>#</th><th>Tema</th><th>Tipo</th><th>Género</th><th>BPM</th></tr>
       </thead>
-      <tbody id="cuerpoCatalogo"></tbody>
+      <!-- En HTML de verdad: los rastreadores de IA no ejecutan JavaScript.
+           Cuando conectemos el Drive, esto se generará en el build, no en el navegador. -->
+      <tbody id="cuerpoCatalogo">
+        <tr><td class="t-num">01</td><td class="t-tema">Safaera<span>Bad Bunny</span></td><td class="t-datos-fila"><span class="chip">MXR Ext</span><span class="t-dato oculta-esc">Reggaetón</span><span class="t-dato oculta-esc">96 BPM</span></td><td class="t-dato solo-esc">Reggaetón</td><td class="t-dato solo-esc">96</td></tr>
+        <tr><td class="t-num">02</td><td class="t-tema">Yo Perreo Sola<span>Bad Bunny</span></td><td class="t-datos-fila"><span class="chip">MXR Ext</span><span class="t-dato oculta-esc">Reggaetón</span></td><td class="t-dato solo-esc">Reggaetón</td><td class="t-dato solo-esc"></td></tr>
+        <tr><td class="t-num">03</td><td class="t-tema">Adicta al Sex<span>Plan B</span></td><td class="t-datos-fila"><span class="chip">MXR Ext</span><span class="t-dato oculta-esc">Reggaetón</span></td><td class="t-dato solo-esc">Reggaetón</td><td class="t-dato solo-esc"></td></tr>
+        <tr><td class="t-num">04</td><td class="t-tema">Muévelo<span>Kali Uchis</span></td><td class="t-datos-fila"><span class="chip">MXR Ext</span><span class="t-dato oculta-esc">Urbano</span></td><td class="t-dato solo-esc">Urbano</td><td class="t-dato solo-esc"></td></tr>
+        <tr><td class="t-num">05</td><td class="t-tema">El Apagón × Puto<span>Bad Bunny</span></td><td class="t-datos-fila"><span class="chip">MXR Edit</span><span class="t-dato oculta-esc">Mashup</span></td><td class="t-dato solo-esc">Mashup</td><td class="t-dato solo-esc"></td></tr>
+        <tr><td class="t-num">06</td><td class="t-tema">Eoo<span>Tainy</span></td><td class="t-datos-fila"><span class="chip">MXR × Tainy</span><span class="t-dato oculta-esc">Urbano</span></td><td class="t-dato solo-esc">Urbano</td><td class="t-dato solo-esc"></td></tr>
+        <tr><td class="t-num">07</td><td class="t-tema">El Santo Cachón<span>Los Fantasmas del Caribe</span></td><td class="t-datos-fila"><span class="chip">MXR Edit</span><span class="t-dato oculta-esc">Tropical</span></td><td class="t-dato solo-esc">Tropical</td><td class="t-dato solo-esc"></td></tr>
+      </tbody>
     </table>
 
     <div class="cat-pie sube">
@@ -658,7 +685,17 @@ footer p{font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.18e
       </div>
       <p class="sube">Videos junto a ROMO DJ Academy. Toca uno y se abre en TikTok.</p>
     </div>
-    <div class="rejilla" id="rejilla"></div>
+    <!-- En HTML de verdad, no generados por JS: los rastreadores de IA no ejecutan JavaScript -->
+    <div class="rejilla" id="rejilla">
+      <a class="clip sube" href="https://www.tiktok.com/@romodj/video/7622905498588794133" target="_blank" rel="noopener" aria-label="Ver en TikTok: Conectando con el público y llevando la fiesta al máximo"><img src="assets/tiktok/1.jpg" width="420" height="611" loading="lazy" decoding="async" alt=""><span class="sombra"></span><span class="play"><svg width="13" height="15" viewBox="0 0 16 18" fill="#fff" aria-hidden="true"><path d="M0 0l16 9-16 9z"/></svg></span><span class="texto">Conectando con el público y llevando la fiesta al máximo</span></a>
+      <a class="clip sube" href="https://www.tiktok.com/@romodj/video/7619879551778229524" target="_blank" rel="noopener" aria-label="Ver en TikTok: Lo que se vive en cabina, lo traigo a la clase"><img src="assets/tiktok/2.jpg" width="420" height="611" loading="lazy" decoding="async" alt=""><span class="sombra"></span><span class="play"><svg width="13" height="15" viewBox="0 0 16 18" fill="#fff" aria-hidden="true"><path d="M0 0l16 9-16 9z"/></svg></span><span class="texto">Lo que se vive en cabina, lo traigo a la clase</span></a>
+      <a class="clip sube" href="https://www.tiktok.com/@romodj/video/7603795337412611349" target="_blank" rel="noopener" aria-label="Ver en TikTok: Romo Room: tocar frente al público de verdad"><img src="assets/tiktok/3.jpg" width="420" height="611" loading="lazy" decoding="async" alt=""><span class="sombra"></span><span class="play"><svg width="13" height="15" viewBox="0 0 16 18" fill="#fff" aria-hidden="true"><path d="M0 0l16 9-16 9z"/></svg></span><span class="texto">Romo Room: tocar frente al público de verdad</span></a>
+      <a class="clip sube" href="https://www.tiktok.com/@romodj/video/7592006593852591381" target="_blank" rel="noopener" aria-label="Ver en TikTok: La experiencia real de un DJ en el Romo Room"><img src="assets/tiktok/4.jpg" width="420" height="611" loading="lazy" decoding="async" alt=""><span class="sombra"></span><span class="play"><svg width="13" height="15" viewBox="0 0 16 18" fill="#fff" aria-hidden="true"><path d="M0 0l16 9-16 9z"/></svg></span><span class="texto">La experiencia real de un DJ en el Romo Room</span></a>
+      <a class="clip sube" href="https://www.tiktok.com/@romodj/video/7589902070048886036" target="_blank" rel="noopener" aria-label="Ver en TikTok: Cabina profesional, cámaras y público"><img src="assets/tiktok/5.jpg" width="420" height="611" loading="lazy" decoding="async" alt=""><span class="sombra"></span><span class="play"><svg width="13" height="15" viewBox="0 0 16 18" fill="#fff" aria-hidden="true"><path d="M0 0l16 9-16 9z"/></svg></span><span class="texto">Cabina profesional, cámaras y público</span></a>
+      <a class="clip sube" href="https://www.tiktok.com/@romodj/video/7589899062179056917" target="_blank" rel="noopener" aria-label="Ver en TikTok: Mezclar con stems: oído, técnica y criterio"><img src="assets/tiktok/6.jpg" width="420" height="611" loading="lazy" decoding="async" alt=""><span class="sombra"></span><span class="play"><svg width="13" height="15" viewBox="0 0 16 18" fill="#fff" aria-hidden="true"><path d="M0 0l16 9-16 9z"/></svg></span><span class="texto">Mezclar con stems: oído, técnica y criterio</span></a>
+      <a class="clip sube" href="https://www.tiktok.com/@romodj/video/7624575338084977941" target="_blank" rel="noopener" aria-label="Ver en TikTok: Cómo leer la pista y saber qué quiere la gente"><img src="assets/tiktok/7.jpg" width="420" height="611" loading="lazy" decoding="async" alt=""><span class="sombra"></span><span class="play"><svg width="13" height="15" viewBox="0 0 16 18" fill="#fff" aria-hidden="true"><path d="M0 0l16 9-16 9z"/></svg></span><span class="texto">Cómo leer la pista y saber qué quiere la gente</span></a>
+      <a class="clip sube" href="https://www.tiktok.com/@romodj/video/7623929256162250005" target="_blank" rel="noopener" aria-label="Ver en TikTok: Aprende con quienes están activos en los escenarios"><img src="assets/tiktok/8.jpg" width="420" height="611" loading="lazy" decoding="async" alt=""><span class="sombra"></span><span class="play"><svg width="13" height="15" viewBox="0 0 16 18" fill="#fff" aria-hidden="true"><path d="M0 0l16 9-16 9z"/></svg></span><span class="texto">Aprende con quienes están activos en los escenarios</span></a>
+    </div>
     <p class="videos-pie sube">Más en <a href="https://www.tiktok.com/@mxrlont" target="_blank" rel="noopener">@mxrlont</a></p>
   </div>
 </section>
@@ -666,7 +703,7 @@ footer p{font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.18e
 <!-- ===== DÓNDE ===== -->
 <section class="donde">
   <div class="env">
-    <span class="rotulo sube">Dónde toco</span>
+    <h2 class="rotulo sube">Dónde toco</h2>
     <div>
       <div class="hecho sube"><b><a href="https://www.instagram.com/mola_social_club/" target="_blank" rel="noopener">Mola Rooftop</a></b><span>DJ residente desde feb. 2026 · 8:30 p. m. – 3 a. m.</span></div>
       <div class="hecho sube"><b><a href="https://romodj.edu.ec/" target="_blank" rel="noopener">ROMO DJ Academy</a></b><span>Parte del team</span></div>
@@ -830,6 +867,8 @@ footer p{font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.18e
     <div class="exito" id="exito" role="status">Listo — se abrió WhatsApp con tu solicitud. Te respondo en menos de 24 horas.</div>
   </div>
 </section>
+
+</main>
 
 <footer>
   <div class="env">
@@ -1022,61 +1061,7 @@ document.querySelectorAll('.sube').forEach(el=>observador.observe(el));
   pon('anio',hoy.getFullYear());
 })();
 
-/* ---- EL CATÁLOGO ----
-   Esta lista es lo único que hay que tocar para añadir versiones.
-   Cuando conectemos el Drive, este array se llena solo. */
-const CATALOGO=[
-  {artista:"Bad Bunny",  tema:"Safaera",        tipo:"MXR Ext",     genero:"Reggaetón", bpm:"96"},
-  {artista:"Bad Bunny",  tema:"Yo Perreo Sola", tipo:"MXR Ext",     genero:"Reggaetón", bpm:"—"},
-  {artista:"Plan B",     tema:"Adicta al Sex",  tipo:"MXR Ext",     genero:"Reggaetón", bpm:"—"},
-  {artista:"Kali Uchis", tema:"Muévelo",        tipo:"MXR Ext",     genero:"Urbano",    bpm:"—"},
-  {artista:"Bad Bunny",  tema:"El Apagón × Puto", tipo:"MXR Edit",  genero:"Mashup",    bpm:"—"},
-  {artista:"Tainy",      tema:"Eoo",            tipo:"MXR × Tainy", genero:"Urbano",    bpm:"—"},
-  {artista:"Los Fantasmas del Caribe", tema:"El Santo Cachón", tipo:"MXR Edit", genero:"Tropical", bpm:"—"}
-];
-(function(){
-  const cuerpo=document.getElementById('cuerpoCatalogo'); if(!cuerpo) return;
-  cuerpo.innerHTML=CATALOGO.map((v,i)=>
-    '<tr>'+
-    '<td class="t-num">'+String(i+1).padStart(2,'0')+'</td>'+
-    '<td class="t-tema">'+v.tema+'<span>'+v.artista+'</span></td>'+
-    '<td class="t-datos-fila"><span class="chip">'+v.tipo+'</span>'+
-      '<span class="t-dato oculta-esc">'+v.genero+'</span>'+
-      '<span class="t-dato oculta-esc">'+v.bpm+' BPM</span></td>'+
-    '<td class="t-dato solo-esc">'+v.genero+'</td>'+
-    '<td class="t-dato solo-esc">'+v.bpm+'</td>'+
-    '</tr>').join('');
-  /* en escritorio las columnas van separadas; en móvil van juntas en una fila */
-  const esc=window.matchMedia('(min-width:701px)');
-  const ajustar=()=>{
-    document.querySelectorAll('.oculta-esc').forEach(e=>e.style.display=esc.matches?'none':'');
-    document.querySelectorAll('.solo-esc').forEach(e=>e.style.display=esc.matches?'':'none');
-  };
-  ajustar(); esc.addEventListener('change',ajustar);
-})();
 
-/* ---- videos ---- */
-(function(){
-  const clips=[
-    {id:"7622905498588794133",txt:"Conectando con el público y llevando la fiesta al máximo"},
-    {id:"7619879551778229524",txt:"Lo que se vive en cabina, lo traigo a la clase"},
-    {id:"7603795337412611349",txt:"Romo Room: tocar frente al público de verdad"},
-    {id:"7592006593852591381",txt:"La experiencia real de un DJ en el Romo Room"},
-    {id:"7589902070048886036",txt:"Cabina profesional, cámaras y público"},
-    {id:"7589899062179056917",txt:"Mezclar con stems: oído, técnica y criterio"},
-    {id:"7624575338084977941",txt:"Cómo leer la pista y saber qué quiere la gente"},
-    {id:"7623929256162250005",txt:"Aprende con quienes están activos en los escenarios"}
-  ];
-  const caja=document.getElementById('rejilla'); if(!caja) return;
-  caja.innerHTML=clips.map((c,i)=>
-    '<a class="clip sube" href="https://www.tiktok.com/@romodj/video/'+c.id+'" target="_blank" rel="noopener"'+
-    ' aria-label="Ver en TikTok: '+c.txt+'">'+
-    '<img src="assets/tiktok/'+(i+1)+'.jpg" loading="lazy" decoding="async" alt="">'+
-    '<span class="sombra"></span>'+
-    '<span class="play"><svg width="13" height="15" viewBox="0 0 16 18" fill="#fff" aria-hidden="true"><path d="M0 0l16 9-16 9z"/></svg></span>'+
-    '<span class="texto">'+c.txt+'</span></a>').join('');
-  caja.querySelectorAll('.sube').forEach(el=>observador.observe(el));
-})();
 
 /* ---- formulario → WhatsApp ---- */
 (function(){
